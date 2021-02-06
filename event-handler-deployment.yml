@@ -27,7 +27,7 @@ spec:
       port: 81
       targetPort: 8080
   selector:
-    app: zeebe
+    app: event-handler
   type: LoadBalancer
   externalIPs:
     - {{your cluster public ip}}
