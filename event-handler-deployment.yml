@@ -48,7 +48,7 @@ spec:
     spec:
       containers:
         - name: event-handler
-          image: registry.pervukhin.net/fpo-k8s-event-handler
+          image: nikolaypervukhin/event-handler
           ports:
             - containerPort: 8080
           livenessProbe:
