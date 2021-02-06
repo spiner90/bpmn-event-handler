@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: event-handler
+  namespace: zeebe-dmn-example
   labels:
     app: event-handler
 spec:
@@ -37,6 +38,7 @@ apiVersion: v1
 kind: ReplicationController
 metadata:
   name: event-handler
+  namespace: zeebe-dmn-example
 spec:
   replicas: 1
   template:
