@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" id="Definitions_0ula699" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Zeebe Modeler" exporterVersion="0.11.0">
+  <bpmn:process id="starter" name="Starter process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0tcgnmo</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0tcgnmo" sourceRef="StartEvent_1" targetRef="doDMN" />
+    <bpmn:serviceTask id="do-actopn-a" name="Выполнить дейтсвие А">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="action" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="statusType" value="A" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_03spqei</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1leqn2g</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_1imaeus">
+      <bpmn:incoming>SequenceFlow_1leqn2g</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1leqn2g" sourceRef="do-actopn-a" targetRef="EndEvent_1imaeus" />
+    <bpmn:sequenceFlow id="Flow_1s7b681" sourceRef="doDMN" targetRef="Gateway_1yw4ptf" />
+    <bpmn:serviceTask id="doDMN" name="Запуск правил">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="DMN" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="decisionRef" value="check" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0tcgnmo</bpmn:incoming>
+      <bpmn:outgoing>Flow_1s7b681</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_1yw4ptf">
+      <bpmn:incoming>Flow_1s7b681</bpmn:incoming>
+      <bpmn:outgoing>Flow_03spqei</bpmn:outgoing>
+      <bpmn:outgoing>Flow_154nu5h</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_03spqei" name="Допустимая сумма" sourceRef="Gateway_1yw4ptf" targetRef="do-actopn-a">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=result = "ok"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="do-action-b" name="Выполнить действие Б">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="action" />
+        <zeebe:taskHeaders>
+          <zeebe:header key="statusType" value="B" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_154nu5h</bpmn:incoming>
+      <bpmn:outgoing>Flow_02rseeq</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_154nu5h" name="Недопустимая сумма" sourceRef="Gateway_1yw4ptf" targetRef="do-action-b">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=result = "not-ok"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_12yph8c">
+      <bpmn:incoming>Flow_02rseeq</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_02rseeq" sourceRef="do-action-b" targetRef="Event_12yph8c" />
+    <bpmn:textAnnotation id="TextAnnotation_0fxvabv">
+      <bpmn:text>Процесс проверки суммы.
+
+Входящие параметры:
+sum (integer) - сумма</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0ug7mff" sourceRef="StartEvent_1" targetRef="TextAnnotation_0fxvabv" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="starter">
+      <bpmndi:BPMNShape id="TextAnnotation_0fxvabv_di" bpmnElement="TextAnnotation_0fxvabv">
+        <dc:Bounds x="200" y="80" width="365" height="68" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_154nu5h_di" bpmnElement="Flow_154nu5h">
+        <di:waypoint x="540" y="222" />
+        <di:waypoint x="540" y="300" />
+        <di:waypoint x="700" y="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="595" y="266" width="75" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03spqei_di" bpmnElement="Flow_03spqei">
+        <di:waypoint x="565" y="197" />
+        <di:waypoint x="700" y="197" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="602" y="166" width="62" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1s7b681_di" bpmnElement="Flow_1s7b681">
+        <di:waypoint x="470" y="197" />
+        <di:waypoint x="515" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0tcgnmo_di" bpmnElement="SequenceFlow_0tcgnmo">
+        <di:waypoint x="268" y="197" />
+        <di:waypoint x="370" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1leqn2g_di" bpmnElement="SequenceFlow_1leqn2g">
+        <di:waypoint x="800" y="197" />
+        <di:waypoint x="862" y="197" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02rseeq_di" bpmnElement="Flow_02rseeq">
+        <di:waypoint x="800" y="300" />
+        <di:waypoint x="862" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_1t0cu29_di" bpmnElement="doDMN">
+        <dc:Bounds x="370" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1yw4ptf_di" bpmnElement="Gateway_1yw4ptf" isMarkerVisible="true">
+        <dc:Bounds x="515" y="172" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="232" y="179" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0x907yk_di" bpmnElement="do-actopn-a">
+        <dc:Bounds x="700" y="157" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1imaeus_di" bpmnElement="EndEvent_1imaeus">
+        <dc:Bounds x="862" y="179" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_112mfoj_di" bpmnElement="do-action-b">
+        <dc:Bounds x="700" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_12yph8c_di" bpmnElement="Event_12yph8c">
+        <dc:Bounds x="862" y="282" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0ug7mff_di" bpmnElement="Association_0ug7mff">
+        <di:waypoint x="250" y="179" />
+        <di:waypoint x="250" y="148" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+connection-zeebe-service:
+  host: ${shared_servers_zeebe}
+  port: 26500
+  workers: 1
+  enabled: true
+
+zeebe-service:
+  client:
+    security:
+      plaintext: true
+
+process:
+  name: starter
