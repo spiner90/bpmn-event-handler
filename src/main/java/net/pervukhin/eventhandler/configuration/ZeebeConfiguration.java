@@ -1,6 +1,6 @@
 package net.pervukhin.eventhandler.configuration;
 
-import io.zeebe.client.ZeebeClient;
+import io.camunda.zeebe.client.ZeebeClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +28,7 @@ public class ZeebeConfiguration {
         if (enabled) {
             logger.info("Connecting to Zeebe:" + zeebeHost + ":" + zeebePort);
             final ZeebeClient zeebeClient = ZeebeClient.newClientBuilder()
-                    .brokerContactPoint(zeebeHost + ":" + zeebePort)
+                    .gatewayAddress(zeebeHost + ":" + zeebePort)
                     .numJobWorkerExecutionThreads(workers)
                     .usePlaintext()
                     .build();

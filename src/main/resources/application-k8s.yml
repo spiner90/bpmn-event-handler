@@ -2,8 +2,8 @@ server:
   port: 8080
 
 connection-zeebe-service:
-  host: ${shared_servers_zeebe}
-  port: 26500
+  host: zeebe.t1c.dev.ts
+  port: 80
   workers: 1
   enabled: true
 
@@ -13,4 +13,4 @@ zeebe-service:
       plaintext: true
 
 process:
-  name: starter
+  name: test-messaging

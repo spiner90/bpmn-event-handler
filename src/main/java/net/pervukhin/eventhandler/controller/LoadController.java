@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/start")
+@RequestMapping
 public class LoadController {
 
     private final String processName;
@@ -24,12 +24,18 @@ public class LoadController {
         this.zeebeService = zeebeService;
     }
 
-    @GetMapping
-    public String getLoad(@RequestParam Integer sum, @RequestParam Double limit) throws JsonProcessingException {
+    @GetMapping("/start")
+    public String getLoad() throws JsonProcessingException {
         Map<String, Object> variables = new HashMap<>();
-        variables.put("sum", sum);
-        variables.put("limit", limit);
         zeebeService.startProcess(processName, variables);
         return "Process started";
+    }
+
+    @GetMapping("/continue")
+    public String moneyCollected(@RequestParam String correlationId, @RequestParam String sum) throws JsonProcessingException {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("sum", sum);
+        zeebeService.sendMessage(correlationId, variables);
+        return "Process resumed";
     }
 }
