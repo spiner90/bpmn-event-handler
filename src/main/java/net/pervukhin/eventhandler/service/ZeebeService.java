@@ -3,6 +3,7 @@ package net.pervukhin.eventhandler.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.zeebe.client.ZeebeClient;
+import io.camunda.zeebe.client.api.response.ProcessInstanceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,12 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -36,14 +41,16 @@ public class ZeebeService {
         subscribeFetchItems();
     }
 
-    public void startProcess(
-            String processName,
-            Map<String, Object> variables) throws JsonProcessingException {
-        zeebeClient.newCreateInstanceCommand()
+    public void startProcess(String processName, Map<String, Object> variables) throws JsonProcessingException {
+
+        ProcessInstanceResult processInstanceResult = zeebeClient.newCreateInstanceCommand()
                 .bpmnProcessId(processName)
                 .latestVersion()
                 .variables(variables)
-                .send();
+                .withResult()
+                .send()
+                .join();
+        logger.info(processInstanceResult.getVariables());
     }
 
     public void sendMessage(
@@ -74,9 +81,10 @@ public class ZeebeService {
     private void subscribeCollectMoney() {
         zeebeClient.newWorker().jobType("collect-money").handler(
                 (jobClient, activatedJob) -> {
-                    logger.debug("Received message from collect-money");
+                    logger.info("Received message from collect-money");
                     Map<String, Object> variables = new HashMap<>();
                     variables.put("orderId", UUID.randomUUID().toString());
+                    logger.info("orderId={}", variables.get("orderId"));
                     jobClient.newCompleteCommand(activatedJob.getKey())
                             .variables(variables)
                             .send()
@@ -88,8 +96,8 @@ public class ZeebeService {
     private void subscribeFetchItems() {
         zeebeClient.newWorker().jobType("fetch-items").handler(
                 (jobClient, activatedJob) -> {
-                    logger.debug("Received message fetch-items");
-                    logger.debug(String.format("sum=%s", activatedJob.getCustomHeaders().get("sum")));
+                    logger.info("variables={}",activatedJob.getVariablesAsMap());
+                    logger.info("Received message fetch-items");
                     jobClient.newCompleteCommand(activatedJob.getKey())
                             .send()
                             .join();

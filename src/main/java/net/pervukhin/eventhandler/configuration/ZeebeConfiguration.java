@@ -1,6 +1,10 @@
 package net.pervukhin.eventhandler.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.camunda.zeebe.client.ZeebeClient;
+import io.camunda.zeebe.client.impl.ZeebeObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,9 +31,13 @@ public class ZeebeConfiguration {
     public ZeebeClient zeebeClient() {
         if (enabled) {
             logger.info("Connecting to Zeebe:" + zeebeHost + ":" + zeebePort);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
             final ZeebeClient zeebeClient = ZeebeClient.newClientBuilder()
                     .gatewayAddress(zeebeHost + ":" + zeebePort)
                     .numJobWorkerExecutionThreads(workers)
+                    .withJsonMapper(new ZeebeObjectMapper(objectMapper))
                     .usePlaintext()
                     .build();
             logger.info("Zeebe connection successful");

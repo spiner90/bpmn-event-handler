@@ -2,8 +2,8 @@ server:
   port: 8080
 
 connection-zeebe-service:
-  host: zeebe.t1c.dev.ts
-  port: 80
+  host: localhost
+  port: 26500
   workers: 1
   enabled: true
 
@@ -13,4 +13,4 @@ zeebe-service:
       plaintext: true
 
 process:
-  name: test-messaging
+  name: test-gateway

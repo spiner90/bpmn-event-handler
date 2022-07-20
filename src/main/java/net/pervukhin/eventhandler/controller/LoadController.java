@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import net.pervukhin.eventhandler.service.ZeebeService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,9 +25,10 @@ public class LoadController {
         this.zeebeService = zeebeService;
     }
 
-    @GetMapping("/start")
-    public String getLoad() throws JsonProcessingException {
+    @GetMapping("/start/{var}")
+    public String getLoad(@PathVariable Integer var) throws JsonProcessingException {
         Map<String, Object> variables = new HashMap<>();
+        variables.put("var", var);
         zeebeService.startProcess(processName, variables);
         return "Process started";
     }
