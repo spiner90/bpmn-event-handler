@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_0jua8l2" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.1.0">
+  <bpmn:process id="test-gateway" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Order placed">
+      <bpmn:outgoing>SequenceFlow_14q7q5o</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_14q7q5o" sourceRef="StartEvent_1" targetRef="Gateway_137oew6" />
+    <bpmn:endEvent id="EndEvent_1kerzct" name="Order fulfilled">
+      <bpmn:incoming>Flow_1k7tfqv</bpmn:incoming>
+      <bpmn:incoming>Flow_1olkexy</bpmn:incoming>
+      <bpmn:incoming>Flow_0m4fgji</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_137oew6" default="Flow_0rb53jx">
+      <bpmn:incoming>SequenceFlow_14q7q5o</bpmn:incoming>
+      <bpmn:outgoing>Flow_1k7tfqv</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0rb53jx</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1k7tfqv" sourceRef="Gateway_137oew6" targetRef="EndEvent_1kerzct">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= var = 2</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="Gateway_1wj9lkd" default="Flow_1bhmlmq">
+      <bpmn:incoming>Flow_0rb53jx</bpmn:incoming>
+      <bpmn:outgoing>Flow_1olkexy</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1bhmlmq</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_0vq3zzy" default="Flow_08bn2uw">
+      <bpmn:incoming>Flow_1bhmlmq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0m4fgji</bpmn:outgoing>
+      <bpmn:outgoing>Flow_08bn2uw</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0rb53jx" sourceRef="Gateway_137oew6" targetRef="Gateway_1wj9lkd" />
+    <bpmn:sequenceFlow id="Flow_1olkexy" sourceRef="Gateway_1wj9lkd" targetRef="EndEvent_1kerzct">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= var = 3</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1bhmlmq" sourceRef="Gateway_1wj9lkd" targetRef="Gateway_0vq3zzy" />
+    <bpmn:sequenceFlow id="Flow_0m4fgji" sourceRef="Gateway_0vq3zzy" targetRef="EndEvent_1kerzct">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= var = 3</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_1erooq9">
+      <bpmn:incoming>Flow_08bn2uw</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_08bn2uw" sourceRef="Gateway_0vq3zzy" targetRef="Event_1erooq9" />
+  </bpmn:process>
+  <bpmn:message id="Message_1c22xeu" name="Money Collected">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=orderId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="test-gateway">
+      <bpmndi:BPMNEdge id="SequenceFlow_14q7q5o_di" bpmnElement="SequenceFlow_14q7q5o">
+        <di:waypoint x="178" y="250" />
+        <di:waypoint x="325" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1k7tfqv_di" bpmnElement="Flow_1k7tfqv">
+        <di:waypoint x="350" y="225" />
+        <di:waypoint x="350" y="130" />
+        <di:waypoint x="662" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rb53jx_di" bpmnElement="Flow_0rb53jx">
+        <di:waypoint x="350" y="275" />
+        <di:waypoint x="350" y="335" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1olkexy_di" bpmnElement="Flow_1olkexy">
+        <di:waypoint x="375" y="360" />
+        <di:waypoint x="680" y="360" />
+        <di:waypoint x="680" y="148" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1bhmlmq_di" bpmnElement="Flow_1bhmlmq">
+        <di:waypoint x="350" y="385" />
+        <di:waypoint x="350" y="425" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0m4fgji_di" bpmnElement="Flow_0m4fgji">
+        <di:waypoint x="375" y="450" />
+        <di:waypoint x="680" y="450" />
+        <di:waypoint x="680" y="148" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08bn2uw_di" bpmnElement="Flow_08bn2uw">
+        <di:waypoint x="350" y="475" />
+        <di:waypoint x="350" y="552" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="142" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="128" y="275" width="64" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_137oew6_di" bpmnElement="Gateway_137oew6" isMarkerVisible="true">
+        <dc:Bounds x="325" y="225" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1kerzct_di" bpmnElement="EndEvent_1kerzct">
+        <dc:Bounds x="662" y="112" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="647" y="88" width="66" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1wj9lkd_di" bpmnElement="Gateway_1wj9lkd" isMarkerVisible="true">
+        <dc:Bounds x="325" y="335" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0vq3zzy_di" bpmnElement="Gateway_0vq3zzy" isMarkerVisible="true">
+        <dc:Bounds x="325" y="425" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1erooq9_di" bpmnElement="Event_1erooq9">
+        <dc:Bounds x="332" y="552" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
